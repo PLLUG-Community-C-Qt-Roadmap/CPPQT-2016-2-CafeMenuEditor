@@ -1,1 +1,1 @@
-# CPPQT-2016-2-CafeMenuEditor
+# menu_editor
