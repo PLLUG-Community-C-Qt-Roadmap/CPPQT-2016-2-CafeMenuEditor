@@ -2,9 +2,10 @@
 
 #include "consoleprintvisitor.h"
 
-MenuItem::MenuItem(const std::string &title, double price)
+MenuItem::MenuItem(const std::string &title, double price, const std::__cxx11::string &description)
     : AbstractMenuItem{title}
     , mPrice{price}
+    , mDescription{description}
 {
 
 }
@@ -19,7 +20,17 @@ void MenuItem::setPrice(double price)
     mPrice = price;
 }
 
-void MenuItem::apply(ConsolePrintVisitor *visitor)
+std::__cxx11::string MenuItem::description() const
+{
+    return mDescription;
+}
+
+void MenuItem::setDescription(const std::__cxx11::string &description)
+{
+    mDescription = description;
+}
+
+void MenuItem::apply(AbstractVisitor *visitor)
 {
     if (visitor)
     {

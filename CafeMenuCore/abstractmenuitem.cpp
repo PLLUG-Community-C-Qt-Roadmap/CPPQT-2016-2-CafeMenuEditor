@@ -19,3 +19,8 @@ std::__cxx11::string AbstractMenuItem::title() const
     return mTitle;
 }
 
+void AbstractMenuItem::setTitle(const std::__cxx11::string &title)
+{
+    mTitle = title;
+}
+

@@ -2,13 +2,14 @@
 #define EDITORDELEGATE_H
 
 #include <QWidget>
-#include "menuvisitor.h"
+
+#include "abstractvisitor.h"
 
 namespace Ui {
 class EditorDelegate;
 }
 
-class EditorDelegate : public QWidget, public MenuVisitor
+class EditorDelegate : public QWidget, public AbstractVisitor
 {
     Q_OBJECT
 
@@ -16,8 +17,8 @@ public:
     explicit EditorDelegate(QWidget *parent = 0);
     ~EditorDelegate();
 
-    virtual void visit(MenuItem *);
-    virtual void visit(Menu *);
+    virtual void visit(MenuItem *) override;
+    virtual void visit(Menu *) override;
 
     void clear();
 

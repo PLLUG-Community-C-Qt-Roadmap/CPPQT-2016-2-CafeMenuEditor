@@ -24,7 +24,7 @@ private:
 
     // AbstractMenuItem interface
 public:
-    virtual void apply(ConsolePrintVisitor *visitor) override;
+    virtual void apply(AbstractVisitor *visitor) override;
 };
 
 #endif // MENU_H

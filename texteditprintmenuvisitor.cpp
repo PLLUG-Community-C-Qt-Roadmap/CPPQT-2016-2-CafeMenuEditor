@@ -2,8 +2,9 @@
 
 #include <QPlainTextEdit>
 
-#include "menuitem.h"
-#include "menu.h"
+#include <menuitem.h>
+#include <menu.h>
+#include "lambdavisitor.h"
 
 TextEditPrintMenuVisitor::TextEditPrintMenuVisitor(QPlainTextEdit *textEdit)
         : mTextEdit{textEdit}
@@ -16,17 +17,9 @@ TextEditPrintMenuVisitor::TextEditPrintMenuVisitor(QPlainTextEdit *textEdit)
  * \param item
  * \return
  */
-QString TextEditPrintMenuVisitor::indent(Composite *item) const
+QString TextEditPrintMenuVisitor::indent(AbstractMenuItem *item) const
 {
     QString rIndentString;
-
-    QString lIndentStep("    ");
-    Composite *lMenuItem = item->parent();
-    while (lMenuItem)
-    {
-        lMenuItem = lMenuItem->parent();
-        rIndentString.append(lIndentStep);
-    }
 
     return rIndentString;
 }
@@ -58,7 +51,6 @@ void TextEditPrintMenuVisitor::visit(MenuItem *item)
  */
 void TextEditPrintMenuVisitor::visit(Menu *menu)
 {
-//    std::cout << indent(menu) << "[" << menu->title() << "]" << std::endl;
     QString outString;
     QString lIndentString = indent(menu);
     outString = QString("%2[%1]").arg(menu->title().c_str()).arg(lIndentString);

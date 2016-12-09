@@ -11,31 +11,29 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = menu_editor
 TEMPLATE = app
 
-CONFIG += c++11
+CONFIG += c++14
 
-SOURCES += main.cpp\
-        mainwindow.cpp \
+include(CafeMenuCore/CafeMenuCore.pri)
+
+SOURCES += \
+    main.cpp \
+    mainwindow.cpp \
     consoleprintmenuvisitor.cpp \
-    composite.cpp \
-    menu.cpp \
-    menuitem.cpp \
     menuiterator.cpp \
     texteditprintmenuvisitor.cpp \
     menucombobox.cpp \
     editordelegate.cpp \
-    adddialog.cpp
+    adddialog.cpp \
+    lambdavisitor.cpp
 
 HEADERS  += mainwindow.h \
     consoleprintmenuvisitor.h \
-    composite.h \
-    menu.h \
-    menuitem.h \
     menuiterator.h \
-    menuvisitor.h \
     texteditprintmenuvisitor.h \
     menucombobox.h \
     editordelegate.h \
-    adddialog.h
+    adddialog.h \
+    lambdavisitor.h
 
 FORMS    += mainwindow.ui \
     editordelegate.ui \

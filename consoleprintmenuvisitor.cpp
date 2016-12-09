@@ -9,18 +9,9 @@
  * \param item
  * \return
  */
-std::string ConsolePrintMenuVisitor::indent(Composite *item) const
+std::string ConsolePrintMenuVisitor::indent(AbstractMenuItem  *item) const
 {
     std::string rIndentString;
-
-    std::string lIndentStep = "    ";
-    Composite *lMenuItem = item->parent();
-    while (lMenuItem)
-    {
-        lMenuItem = lMenuItem->parent();
-        rIndentString.append(lIndentStep);
-    }
-
     return rIndentString;
 }
 

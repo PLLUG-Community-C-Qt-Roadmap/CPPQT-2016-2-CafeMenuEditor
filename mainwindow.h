@@ -2,11 +2,14 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+
+#include <memory>
+
 namespace Ui {
 class MainWindow;
 }
 
-class Composite;
+class AbstractMenuItem;
 
 class MainWindow : public QMainWindow
 {
@@ -18,7 +21,6 @@ public:
 
 public slots:
     void slotPrintMenu();
-    void slotDeleteButton();
 
 private slots:
     void menuElementSelected();
@@ -29,14 +31,12 @@ private slots:
     void slotItemChanged();
     void slotSaveEditedItem();
 
-    void slotEnableDeleteButton();
-    void slotDisableDeleteButton();
 private:
     void createMenu();
 
 private:
     Ui::MainWindow *ui;
-    Composite *mRoot;
+    std::unique_ptr<AbstractMenuItem> mRoot;
 };
 
 #endif // MAINWINDOW_H

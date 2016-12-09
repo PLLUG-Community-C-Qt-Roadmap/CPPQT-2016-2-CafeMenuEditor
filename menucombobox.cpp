@@ -1,6 +1,6 @@
 #include "menucombobox.h"
 
-#include "composite.h"
+#include <menu.h>
 #include "menuiterator.h"
 
 /*!
@@ -18,7 +18,7 @@ MenuComboBox::MenuComboBox(QWidget *parent)
  *  та оновлює QComboBox.
  * \param menu Вказівник на Compositor - кореневий елемент у єрархії нашого меню.
  */
-void MenuComboBox::setMenu(Composite *menu)
+void MenuComboBox::setMenu(AbstractMenuItem *menu)
 {
     mRoot = menu;
     clear();  // Очищаємо QComboBox
@@ -26,7 +26,7 @@ void MenuComboBox::setMenu(Composite *menu)
     populateComboBox(); // Наповнюємо QComboBox заново
 }
 
-Composite *MenuComboBox::currentMenuItem() const
+AbstractMenuItem *MenuComboBox::currentMenuItem() const
 {
     int itemId = currentData().toInt();
     return mItemByIndex.value(itemId);
@@ -45,7 +45,7 @@ void MenuComboBox::populateComboBox()
         MenuIterator iterator(mRoot); // Створюємо ітератор для меню.
         while (iterator.hasNext())  // Якщо елемент є
         {
-            Composite * item = iterator.next(); //  Беремо елемент, і пересуваємо ітератор на наступний
+            AbstractMenuItem * item = iterator.next(); //  Беремо елемент, і пересуваємо ітератор на наступний
 
             // Додаємо елементи у QHash
             // To be able to access certain menu item by item id taken from QComboBox item data.

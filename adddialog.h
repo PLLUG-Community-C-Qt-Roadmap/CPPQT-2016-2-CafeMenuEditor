@@ -3,11 +3,14 @@
 
 #include <QDialog>
 
+#include <memory>
+
 namespace Ui {
 class AddDialog;
 }
 
-class Composite;
+class AbstractMenuItem;
+class Menu;
 
 class AddDialog : public QDialog
 {
@@ -17,9 +20,7 @@ public:
     explicit AddDialog(QWidget *parent = 0);
     ~AddDialog();
 
-    void setMenu(Composite *);
-
-    Composite* newMenuItem() const;
+    void setMenu(AbstractMenuItem *);
 
 protected:
     void showEvent(QShowEvent *);
@@ -31,6 +32,7 @@ private slots:
     void slotOkClicked();
 
     void slotChanged();
+    void slotParentChanged();
 
 private:
     void showPage1();
@@ -40,9 +42,9 @@ private:
 
 private:
     Ui::AddDialog *ui;
-    Composite *mRoot;
-    Composite *mNewItem;
-    Composite *mParent;
+    AbstractMenuItem *mRoot;
+    std::unique_ptr<AbstractMenuItem> mNewItem;
+    Menu *mParent;
 };
 
 #endif // ADDDIALOG_H

@@ -36,7 +36,7 @@ void Menu::append(std::unique_ptr<AbstractMenuItem> item)
     mListItems.push_back(std::move(item));
 }
 
-void Menu::apply(ConsolePrintVisitor *visitor)
+void Menu::apply(AbstractVisitor *visitor)
 {
     if (visitor)
     {

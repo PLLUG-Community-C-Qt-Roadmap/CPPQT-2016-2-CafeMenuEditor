@@ -1,21 +1,21 @@
 #ifndef CONSOLEPRINTMENUVISITOR_H
 #define CONSOLEPRINTMENUVISITOR_H
 
-#include "menuvisitor.h"
+#include <abstractvisitor.h>
 #include <string>
 
-class Composite;
+class AbstractMenuItem;
 /*!
  * \brief The ConsolePrintMenuVisitor class
  */
-class ConsolePrintMenuVisitor : public MenuVisitor
+class ConsolePrintMenuVisitor : public AbstractVisitor
 {
 public:
-    void visit(MenuItem *item);
-    void visit(Menu *menu);
+    virtual void visit(MenuItem *item) override;
+    virtual void visit(Menu *menu) override;
 
 private:
-    std::string indent(Composite *item) const;
+    std::string indent(AbstractMenuItem *item) const;
 };
 
 #endif // CONSOLEPRINTMENUVISITOR_H

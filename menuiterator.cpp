@@ -1,13 +1,35 @@
 #include "menuiterator.h"
-#include "composite.h"
+
+#include <utility>
+
+#include <abstractmenuitem.h>
+#include <menu.h>
+
+#include "lambdavisitor.h"
 
 /*!
  * \brief MenuIterator::MenuIterator constructor
  * \param container is menu item to iterate
  */
-MenuIterator::MenuIterator(Composite *container)
+MenuIterator::MenuIterator(AbstractMenuItem *menu)
+    : mAddChildrenVisitor{std::make_unique<LambdaVisitor>()}
 {
-    addChildrenForTraversal(container);
+    auto addChildrenForTraversal = [this](Menu *item)
+    {
+        if (!item)
+        {
+            return;
+        }
+
+        for (int index = 0; index < item->count(); ++index)
+        {
+            auto next = item->at(index);
+            this->mItemsStack.push(next);
+        }
+    };
+
+    mAddChildrenVisitor->setMenuHandler(addChildrenForTraversal);
+    menu->apply(mAddChildrenVisitor.get());
 }
 
 /*!
@@ -23,27 +45,12 @@ bool MenuIterator::hasNext() const
  * \brief MenuIterator::next
  * \return next menu item
  */
-Composite *MenuIterator::next()
+AbstractMenuItem *MenuIterator::next()
 {
-    Composite *nextItem = mItemsStack.top();
+    AbstractMenuItem *nextItem = mItemsStack.top();
     mItemsStack.pop();
 
-    addChildrenForTraversal(nextItem);
+    nextItem->apply(mAddChildrenVisitor.get());
     return nextItem;
 }
 
-/*!
- * \brief MenuIterator::addChildrenForTraversal
- * \param contaner is menu item to iterate
- */
-void MenuIterator::addChildrenForTraversal(Composite *container)
-{
-    if (container)
-    {
-        for (int index = 0; index < container->subitemsCount(); ++index)
-        {
-            Composite *item = container->child(index);
-            mItemsStack.push(item);
-        }
-    }
-}

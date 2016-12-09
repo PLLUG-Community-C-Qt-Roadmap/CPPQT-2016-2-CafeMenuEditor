@@ -1,25 +1,26 @@
 #ifndef TEXTEDITPRINTMENUVISITOR_H
 #define TEXTEDITPRINTMENUVISITOR_H
 
-#include "menuvisitor.h"
+#include <abstractvisitor.h>
 
 #include<QString>
 
-class Composite;
+class AbstractMenuItem;
 class QPlainTextEdit;
 /*!
  * \brief The ConsolePrintMenuVisitor class
  */
-class TextEditPrintMenuVisitor : public MenuVisitor
+class TextEditPrintMenuVisitor : public AbstractVisitor
 {
 public:
     TextEditPrintMenuVisitor(QPlainTextEdit *textEdit);
-    void visit(MenuItem *item);
-    void visit(Menu *menu);
+
+    virtual void visit(MenuItem *item) override;
+    virtual void visit(Menu *menu) override;
 
 private:
     QPlainTextEdit *mTextEdit;
-    QString indent(Composite *item) const;
+    QString indent(AbstractMenuItem *item) const;
 };
 
 

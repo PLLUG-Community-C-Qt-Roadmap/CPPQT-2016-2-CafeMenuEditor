@@ -4,7 +4,7 @@
 #include <QComboBox>
 #include <QHash>
 
-class Composite;
+class AbstractMenuItem;
 
 class MenuComboBox : public QComboBox
 {
@@ -12,18 +12,18 @@ class MenuComboBox : public QComboBox
 public:
     MenuComboBox(QWidget *parent = 0);
 
-    void setMenu(Composite *menu);
+    void setMenu(AbstractMenuItem *menu);
 
-    Composite* currentMenuItem() const;
+    AbstractMenuItem* currentMenuItem() const;
 
     void updateComboBox();
 private:
     void populateComboBox();
 
 private:
-    Composite *mRoot; //Кореневий елемент у меню (той елемент який містить усі інші)
+    AbstractMenuItem *mRoot; //Кореневий елемент у меню (той елемент який містить усі інші)
 
-    QHash<int, Composite*> mItemByIndex; // Contains pairs: index - menu item.
+    QHash<int, AbstractMenuItem*> mItemByIndex; // Contains pairs: index - menu item.
     // Used to get menu item using index. When we choose item in combo box,
     // we will get index of that item (in combo box). Using its index we will
     // get poiner to certain menu element from QHash.

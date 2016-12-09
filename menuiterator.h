@@ -2,8 +2,10 @@
 #define MENUITERATOR_H
 
 #include <stack>
+#include <memory>
 
-class Composite;
+class AbstractMenuItem;
+#include "lambdavisitor.h"
 
 /*!
  * \brief The MenuIterator class implements depth first iteraotion
@@ -12,16 +14,14 @@ class Composite;
 class MenuIterator
 {
 public:
-    MenuIterator(Composite *container);
+    MenuIterator(AbstractMenuItem *menu);
 
     bool hasNext() const;
-    Composite *next();
+    AbstractMenuItem *next();
 
 private:
-    void addChildrenForTraversal(Composite *container);
-
-private:
-    std::stack<Composite *> mItemsStack;
+    std::stack<AbstractMenuItem *> mItemsStack;
+    std::unique_ptr<LambdaVisitor> mAddChildrenVisitor;
 };
 
 #endif // MENUITERATOR_H
