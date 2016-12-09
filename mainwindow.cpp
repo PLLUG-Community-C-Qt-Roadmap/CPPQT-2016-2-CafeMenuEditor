@@ -28,6 +28,9 @@ MainWindow::MainWindow(QWidget *parent) :
             this, SLOT(slotSaveEditedItem()), Qt::UniqueConnection);
     connect(ui->menuEditorDelegate, SIGNAL(itemChanged()),
             this, SLOT(slotItemChanged()), Qt::UniqueConnection);
+    //First task. Add new button '+'
+    connect(ui->addButton, SIGNAL(clicked(bool)),
+            this, SLOT(slotAddNewItem()), Qt::UniqueConnection);
 }
 
 MainWindow::~MainWindow()
