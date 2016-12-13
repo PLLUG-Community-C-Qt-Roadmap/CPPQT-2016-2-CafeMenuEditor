@@ -2,10 +2,11 @@
 
 #include "consoleprintvisitor.h"
 
-MenuItem::MenuItem(const std::string &title, double price, const std::__cxx11::string &description)
+MenuItem::MenuItem(const std::string &title, double price, const std::string &description,bool neue)
     : AbstractMenuItem{title}
     , mPrice{price}
     , mDescription{description}
+    , mNeue{neue}
 {
 
 }
@@ -20,12 +21,24 @@ void MenuItem::setPrice(double price)
     mPrice = price;
 }
 
-std::__cxx11::string MenuItem::description() const
+bool MenuItem::neue () const
+{
+   return mNeue;
+}
+
+void MenuItem::setNeue(bool neue)
+{
+    mNeue = neue;
+}
+
+
+
+std::string MenuItem::description() const
 {
     return mDescription;
 }
 
-void MenuItem::setDescription(const std::__cxx11::string &description)
+void MenuItem::setDescription(const std::string &description)
 {
     mDescription = description;
 }

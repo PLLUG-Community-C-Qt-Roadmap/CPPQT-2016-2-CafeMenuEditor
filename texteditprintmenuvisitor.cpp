@@ -34,8 +34,16 @@ void TextEditPrintMenuVisitor::visit(MenuItem *item)
 
     QString lIndentString = indent(item);
 
-    outString = QString("%1 > %2    %3$").arg(lIndentString).arg(item->title().c_str()).arg(item->price());
-    mTextEdit->appendPlainText(outString);
+    if (item->neue())
+    {
+        outString = QString("*** NEW ***    %1 > %2    %3$").arg(lIndentString).arg(item->title().c_str()).arg(item->price());
+        mTextEdit->appendPlainText(outString);
+    }
+    else
+    {
+        outString = QString("%1 > %2    %3$").arg(lIndentString).arg(item->title().c_str()).arg(item->price());
+        mTextEdit->appendPlainText(outString);
+    }
 
     if (!item->description().empty())
     {

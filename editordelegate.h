@@ -2,8 +2,9 @@
 #define EDITORDELEGATE_H
 
 #include <QWidget>
-
+#include <QMessageBox>
 #include "abstractvisitor.h"
+
 
 namespace Ui {
 class EditorDelegate;
@@ -21,6 +22,9 @@ public:
     virtual void visit(Menu *) override;
 
     void clear();
+
+
+
 
 public slots:
     void slotSave();

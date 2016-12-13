@@ -13,6 +13,7 @@ EditorDelegate::EditorDelegate(QWidget *parent) :
     connect(ui->menuItemNameLineEdit, SIGNAL(textChanged(QString)), this, SIGNAL(itemChanged()), Qt::UniqueConnection);
     connect(ui->menuItemDescriptionLineEdit, SIGNAL(textChanged(QString)), this, SIGNAL(itemChanged()), Qt::UniqueConnection);
     connect(ui->menuItemPriceSpinBox, SIGNAL(valueChanged(double)), this, SIGNAL(itemChanged()), Qt::UniqueConnection);
+    connect(ui->menuItemProposalChekBox, SIGNAL(stateChanged(int)), this, SIGNAL(itemChanged()), Qt::UniqueConnection);
 }
 
 EditorDelegate::~EditorDelegate()
@@ -30,6 +31,7 @@ void EditorDelegate::visit(MenuItem *item)
     ui->menuItemNameLineEdit->setText(item->title().c_str());
     ui->menuItemDescriptionLineEdit->setText(item->description().c_str());
     ui->menuItemPriceSpinBox->setValue(item->price());
+    ui->menuItemProposalChekBox->stateChanged(item->neue());
 
     mEditedMenuItem = item;
 
@@ -57,16 +59,34 @@ void EditorDelegate::clear()
     mEditedMenuItem = nullptr;
 }
 
+
+
 void EditorDelegate::slotSave()
 {
-    if (mEditedMenuItem)
-    {
-        mEditedMenuItem->setTitle(ui->menuItemNameLineEdit->text().toStdString());
-        mEditedMenuItem->setDescription(ui->menuItemDescriptionLineEdit->text().toStdString());
-        mEditedMenuItem->setPrice(ui->menuItemPriceSpinBox->value());
-    }
-    if(mEditedMenu)
-    {
-        mEditedMenu->setTitle(ui->menuNameLineEdit->text().toStdString());
-    }
+//    if(ui->menuItemNameLineEdit->text().toStdString().empty())
+//    {
+//            do
+//            {
+//                QMessageBox msgBox;
+//                msgBox.setText("Please, enter name first.");
+//                msgBox.exec();
+
+//            }
+//        while(!(ui->menuItemNameLineEdit->text().toStdString().empty()));
+
+//    }
+//    else
+//    {
+            if (mEditedMenuItem)
+            {
+                mEditedMenuItem->setTitle(ui->menuItemNameLineEdit->text().toStdString());
+                mEditedMenuItem->setDescription(ui->menuItemDescriptionLineEdit->text().toStdString());
+                mEditedMenuItem->setPrice(ui->menuItemPriceSpinBox->value());
+                mEditedMenuItem->setNeue(ui->menuItemProposalChekBox->checkState());
+            }
+            if(mEditedMenu)
+            {
+                mEditedMenu->setTitle(ui->menuNameLineEdit->text().toStdString());
+            }
+//    }
 }

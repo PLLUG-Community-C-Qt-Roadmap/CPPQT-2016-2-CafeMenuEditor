@@ -6,7 +6,7 @@
  * \brief Public constructor.
  * \param title Menu title.
  */
-Menu::Menu(const std::__cxx11::string &title)
+Menu::Menu(const std::string &title)
     : AbstractMenuItem{title}
 {
 

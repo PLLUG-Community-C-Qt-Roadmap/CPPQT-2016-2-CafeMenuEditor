@@ -82,8 +82,9 @@ void AddDialog::slotNextClicked()
 
 void AddDialog::slotOkClicked()
 {
-    mParent->append(std::move(mNewItem));
+
     ui->widget->slotSave();
+    mParent->append(std::move(mNewItem));
     accept();
 }
 

@@ -23,7 +23,10 @@ void ConsolePrintMenuVisitor::visit(MenuItem *item)
 {
     std::string lIndentString = indent(item);
 
-    std::cout << lIndentString << "> " << item->title() << "    :        " << item->price() << "$" << std::endl;
+//    if(!item->description().empty())
+//    std::cout << lIndentString <<"*** NEW  ";
+
+    std::cout << lIndentString <<"NEW"<< "> " << item->title() << "    :        " << item->price() << "$" << std::endl;
 
     if (!item->description().empty())
     {

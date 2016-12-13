@@ -14,12 +14,12 @@ AbstractMenuItem::AbstractMenuItem(const std::string &title)
  * \brief Returns title for the menu item.
  * \return Title text string.
  */
-std::__cxx11::string AbstractMenuItem::title() const
+std::string AbstractMenuItem::title() const
 {
     return mTitle;
 }
 
-void AbstractMenuItem::setTitle(const std::__cxx11::string &title)
+void AbstractMenuItem::setTitle(const std::string &title)
 {
     mTitle = title;
 }

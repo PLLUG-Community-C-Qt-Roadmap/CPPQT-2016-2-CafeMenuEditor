@@ -9,6 +9,7 @@
 #include "texteditprintmenuvisitor.h"
 #include "menuiterator.h"
 #include "adddialog.h"
+#include "ui_adddialog.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -78,8 +79,10 @@ void MainWindow::slotAddNewItem()
     AddDialog addDialog;
     addDialog.setMenu(mRoot.get());
 
+
     if (QDialog::Accepted == addDialog.exec())
     {
+
         slotUpdateMenu();
     }
 }
@@ -91,8 +94,8 @@ void MainWindow::slotItemChanged()
 
 void MainWindow::slotSaveEditedItem()
 {
-    ui->savePushButton->setEnabled(false);
     ui->menuEditorDelegate->slotSave();
+    ui->savePushButton->setEnabled(false);
     slotUpdateMenu();
 }
 

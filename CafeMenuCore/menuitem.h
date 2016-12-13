@@ -11,10 +11,14 @@ class MenuItem : public AbstractMenuItem
 public:
     MenuItem(const std::string &title
         , double price
-        , const std::string &description = {});
+        , const std::string &description = {}
+        , bool neue = false);
 
     double price() const;
     void setPrice(double price);
+
+    bool neue() const;
+    void setNeue(bool neue);
 
     std::string description() const;
     void setDescription(const std::string &description);
@@ -22,6 +26,7 @@ public:
 private:
     double mPrice;
     std::string mDescription;
+    bool mNeue;
 
     // AbstractMenuItem interface
 public:
