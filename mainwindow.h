@@ -2,8 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-
 #include <memory>
+
+class QJsonObject;
 
 namespace Ui {
 class MainWindow;
@@ -30,9 +31,11 @@ private slots:
 
     void slotItemChanged();
     void slotSaveEditedItem();
+    void slotOpenFile();
 
 private:
     void createMenu();
+    std::unique_ptr<AbstractMenuItem> createMenuFromJson(QJsonObject sub);
 
 private:
     Ui::MainWindow *ui;

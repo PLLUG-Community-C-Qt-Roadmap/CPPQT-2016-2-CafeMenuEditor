@@ -5,6 +5,16 @@
 
 #include <menu.h>
 #include <menuitem.h>
+#include <QJsonObject>
+#include <string>
+#include <queue>
+#include <QJsonArray>
+#include <QFileDialog>
+#include <QDebug>
+#include <QFile>
+#include <QJsonDocument>
+#include <QDir>
+#include <map>
 
 #include "texteditprintmenuvisitor.h"
 #include "menuiterator.h"
@@ -32,6 +42,8 @@ MainWindow::MainWindow(QWidget *parent) :
     //First task. Add new button '+'
     connect(ui->addButton, SIGNAL(clicked(bool)),
             this, SLOT(slotAddNewItem()), Qt::UniqueConnection);
+    connect(ui->action_Open, SIGNAL(triggered(bool)),
+             this, SLOT(slotOpenFile()), Qt::UniqueConnection);
 }
 
 MainWindow::~MainWindow()
@@ -99,6 +111,27 @@ void MainWindow::slotSaveEditedItem()
     slotUpdateMenu();
 }
 
+void MainWindow::slotOpenFile()
+{
+    QFileDialog openDialog(this, tr("Open File..."), QDir::homePath(), tr("Json Files (*.json);All Files (*.*)"));
+    openDialog.setAcceptMode(QFileDialog::AcceptOpen);
+    QFile file(QFileDialog::getOpenFileName(this, tr("Open File..."), QDir::homePath(), "Json Files (*.json);; All Files (*.*)"));
+    file.open(QIODevice::ReadOnly);
+
+    QTextStream file_text(&file);
+    QString json_string;
+    json_string = file_text.readAll();
+    file.close();
+    QByteArray json_bytes = json_string.toLocal8Bit();
+    auto result = QJsonDocument::fromJson(json_bytes);
+    auto arrJson = result.object();
+    mRoot.reset();
+    auto root = std::make_unique<Menu>("MAIN MENU");
+    root->append(std::move(createMenuFromJson(arrJson)));
+    mRoot = std::move(root);
+    slotUpdateMenu();
+}
+
 void MainWindow::createMenu()
 {
     auto root = std::make_unique<Menu>("MAIN MENU");
@@ -136,4 +169,78 @@ void MainWindow::createMenu()
     root->append(std::move(beveragesMenu));
 
     mRoot = std::move(root);
+}
+
+std::unique_ptr<AbstractMenuItem> MainWindow::createMenuFromJson(QJsonObject sub)
+{
+     auto keys = sub.keys();
+     int index = 0;
+     std::queue<QJsonArray> children;
+     std::map<std::string, std::string> valueStr;
+     std::map<std::string, double> valueDouble;
+     std::map<std::string, bool> valueBool;
+     for(auto i : sub)
+     {
+         if(i.isArray())
+         {
+             //foo(i.toArray(), deep+1);
+             children.push(i.toArray());
+             ++index;
+         }
+         else
+         {
+             QString key = keys[index++];
+             if(i.isString())
+             {
+//                 if(key == "type")
+//                 {
+//                     type = .c_str();
+//                 }
+//                 else if(key == "title")
+//                 {
+//                     title = i.toString().toStdString().c_str();
+//                 }
+//                 else if(key == "description")
+//                 {
+//                     description = i.toString().toStdString().c_str();
+//                 }
+                 valueStr[key.toStdString()] = i.toString().toStdString();
+             }
+             if(i.isDouble())
+             {
+//                 if(key == "price")
+//                 {
+//                     price = i.toDouble();
+//                 }
+                 valueDouble[key.toStdString()] = i.toDouble();
+             }
+             if(i.isBool())
+             {
+                 valueBool[key.toStdString()] = i.toBool();
+             }
+         }
+     }
+     //create new menu or menuitem
+     std::unique_ptr<MenuItem> newMenuItem;
+     std::unique_ptr<Menu> newMenu;
+     if(valueStr["type"] == "Menu")
+     {
+         newMenu = std::make_unique<Menu>(valueStr["title"]);
+         while(!children.empty())
+         {
+             //append all children
+             auto currentItem = children.front();
+             children.pop();
+             for(auto j : currentItem)
+             {
+                 newMenu->append(createMenuFromJson(j.toObject()));
+             }
+         }
+         return std::move(newMenu);
+     }
+     else
+     {
+         newMenuItem = std::make_unique<MenuItem>(valueStr["title"], valueDouble["price"], valueStr["description"]);
+         return std::move(newMenuItem);
+     }
 }
