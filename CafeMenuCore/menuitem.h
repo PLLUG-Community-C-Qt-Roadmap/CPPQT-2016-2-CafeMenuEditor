@@ -22,7 +22,7 @@ public:
 
     std::string description() const;
     void setDescription(const std::string &description);
-
+    void removeSubitem();
 private:
     double mPrice;
     std::string mDescription;

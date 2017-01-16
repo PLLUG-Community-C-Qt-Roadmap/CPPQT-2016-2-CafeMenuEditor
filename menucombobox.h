@@ -15,14 +15,12 @@ public:
     void setMenu(AbstractMenuItem *menu);
 
     AbstractMenuItem* currentMenuItem() const;
-
+    void clearData();
     void updateComboBox();
 private:
     void populateComboBox();
 
-private:
     AbstractMenuItem *mRoot; //Кореневий елемент у меню (той елемент який містить усі інші)
-
     QHash<int, AbstractMenuItem*> mItemByIndex; // Contains pairs: index - menu item.
     // Used to get menu item using index. When we choose item in combo box,
     // we will get index of that item (in combo box). Using its index we will

@@ -23,7 +23,7 @@
       <widget class="QWidget" name="layoutWidget">
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0" columnstretch="0,0">
+         <layout class="QGridLayout" name="gridLayout" rowstretch="0" columnstretch="0,0">
           <property name="sizeConstraint">
            <enum>QLayout::SetDefaultConstraint</enum>
           </property>
@@ -67,8 +67,16 @@
          </layout>
         </item>
         <item>
-         <widget class="EditorDelegate" name="menuEditorDelegate" native="true">
-          <zorder>gridLayoutWidget</zorder>
+         <widget class="EditorDelegate" name="menuEditorDelegate" native="true"/>
+        </item>
+        <item>
+         <widget class="QPushButton" name="buttonDelete">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>Delete</string>
+          </property>
          </widget>
         </item>
         <item>
@@ -103,7 +111,7 @@
      <x>0</x>
      <y>0</y>
      <width>950</width>
-     <height>18</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

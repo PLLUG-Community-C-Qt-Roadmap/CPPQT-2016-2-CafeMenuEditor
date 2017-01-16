@@ -5,7 +5,8 @@
  * \param title Menu title.
  */
 AbstractMenuItem::AbstractMenuItem(const std::string &title)
-    : mTitle{title}
+    : mTitle{title},
+      mUp(nullptr)
 {
 
 }
@@ -22,5 +23,10 @@ std::string AbstractMenuItem::title() const
 void AbstractMenuItem::setTitle(const std::string &title)
 {
     mTitle = title;
+}
+
+void AbstractMenuItem::setUp(Menu *up)
+{
+    mUp = up;
 }
 

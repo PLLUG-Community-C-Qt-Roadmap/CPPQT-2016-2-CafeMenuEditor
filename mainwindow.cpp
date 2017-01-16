@@ -44,6 +44,7 @@ MainWindow::MainWindow(QWidget *parent) :
             this, SLOT(slotAddNewItem()), Qt::UniqueConnection);
     connect(ui->action_Open, SIGNAL(triggered(bool)),
              this, SLOT(slotOpenFile()), Qt::UniqueConnection);
+    connect(ui->buttonDelete, SIGNAL(clicked(bool)), this, SLOT(slotDeleteItem()), Qt::UniqueConnection);
 }
 
 MainWindow::~MainWindow()
@@ -73,6 +74,7 @@ void MainWindow::menuElementSelected()
 
     AbstractVisitor *visitor = ui->menuEditorDelegate;
     item->apply(visitor);
+    ui->buttonDelete->setEnabled(true);
 }
 
 void MainWindow::slotUpdateMenu()
@@ -132,14 +134,26 @@ void MainWindow::slotOpenFile()
     slotUpdateMenu();
 }
 
+void MainWindow::slotDeleteItem()
+{
+    auto toDel = ui->menuComboBox->currentMenuItem();
+    ui->menuComboBox->clearData();
+    toDel->removeSubitem();
+    ui->menuComboBox->updateComboBox();
+    slotPrintMenu();
+    ui->menuComboBox->updateComboBox();
+    if(ui->menuComboBox->currentIndex() < 0)
+    {
+        ui->buttonDelete->setEnabled(false);
+    }
+
+}
+
 void MainWindow::createMenu()
 {
     auto root = std::make_unique<Menu>("MAIN MENU");
 
-    auto pizzaMenu = std::make_unique<Menu>("Pizza Menu");
-    pizzaMenu->append(std::make_unique<MenuItem>("hawaiian pizza", 2.4, "cheese and tomato base with toppings of ham and pineapple"));
-    pizzaMenu->append(std::make_unique<MenuItem>("vegetarian pizza", 4.2, "cheese and tomato ... "));
-    root->append(std::move(pizzaMenu));
+
 
     auto beveragesMenu = std::make_unique<Menu>("Beverages");
     beveragesMenu->append(std::make_unique<MenuItem>("Coca-Cola", 2));
@@ -165,9 +179,15 @@ void MainWindow::createMenu()
     alcoDrinksMenu->append(std::move(winesMenu));
     alcoDrinksMenu->append(std::make_unique<MenuItem>("Beer", 5));
     beveragesMenu->append(std::move(alcoDrinksMenu));
-
     root->append(std::move(beveragesMenu));
-
+    auto pizzaMenu = std::make_unique<Menu>("Pizza Menu");
+    pizzaMenu->append(std::make_unique<MenuItem>("hawaiian pizza", 2.4, "cheese and tomato base with toppings of ham and pineapple"));
+    pizzaMenu->append(std::make_unique<MenuItem>("vegetarian pizza", 4.2, "cheese and tomato ... "));
+    root->append(std::make_unique<MenuItem>(";",0,"p"));
+    root->append(std::move(pizzaMenu));
+    auto mainRoot = std::make_unique<Menu>("main root");
+    root->append(std::make_unique<MenuItem>("Please, do not crash me", 100,":)"));
+//    mainRoot->append(std::move(root));
     mRoot = std::move(root);
 }
 
@@ -192,26 +212,10 @@ std::unique_ptr<AbstractMenuItem> MainWindow::createMenuFromJson(QJsonObject sub
              QString key = keys[index++];
              if(i.isString())
              {
-//                 if(key == "type")
-//                 {
-//                     type = .c_str();
-//                 }
-//                 else if(key == "title")
-//                 {
-//                     title = i.toString().toStdString().c_str();
-//                 }
-//                 else if(key == "description")
-//                 {
-//                     description = i.toString().toStdString().c_str();
-//                 }
                  valueStr[key.toStdString()] = i.toString().toStdString();
              }
              if(i.isDouble())
              {
-//                 if(key == "price")
-//                 {
-//                     price = i.toDouble();
-//                 }
                  valueDouble[key.toStdString()] = i.toDouble();
              }
              if(i.isBool())

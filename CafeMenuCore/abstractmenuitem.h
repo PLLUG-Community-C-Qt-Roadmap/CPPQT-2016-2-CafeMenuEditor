@@ -2,7 +2,7 @@
 #define ABSTRACTMENUITEM_H
 
 #include <string>
-
+class Menu;
 /*!
  * \brief The AbstractMenuItem class is the base class for items containing in the menu.
  */
@@ -18,9 +18,11 @@ public:
     void setTitle(const std::string& title);
 
     virtual void apply(AbstractVisitor *visitor) = 0;
-
+    virtual void removeSubitem()=0;
     virtual ~AbstractMenuItem() {}
-
+    void setUp(Menu* up);
+protected:
+    Menu* mUp;
 private:
     std::string mTitle;
 };

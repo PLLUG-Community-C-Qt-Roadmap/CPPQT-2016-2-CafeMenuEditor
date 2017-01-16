@@ -1,4 +1,5 @@
 #include "menuitem.h"
+#include "menu.h";
 
 #include "consoleprintvisitor.h"
 
@@ -41,6 +42,11 @@ std::string MenuItem::description() const
 void MenuItem::setDescription(const std::string &description)
 {
     mDescription = description;
+}
+
+void MenuItem::removeSubitem()
+{
+    mUp->deleteChild(this);
 }
 
 void MenuItem::apply(AbstractVisitor *visitor)

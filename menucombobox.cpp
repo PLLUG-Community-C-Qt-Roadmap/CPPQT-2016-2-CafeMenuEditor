@@ -32,6 +32,12 @@ AbstractMenuItem *MenuComboBox::currentMenuItem() const
     return mItemByIndex.value(itemId);
 }
 
+void MenuComboBox::clearData()
+{
+    clear();
+    mItemByIndex.clear();
+}
+
 void MenuComboBox::updateComboBox()
 {
     clear();

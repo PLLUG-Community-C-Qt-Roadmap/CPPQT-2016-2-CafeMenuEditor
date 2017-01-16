@@ -18,7 +18,8 @@ public:
     AbstractMenuItem *at(int index) const;
 
     void append(std::unique_ptr<AbstractMenuItem> item);
-
+    void removeSubitem();
+    void deleteChild(AbstractMenuItem* child);
 private:
     std::vector<std::unique_ptr<AbstractMenuItem>> mListItems;
 
