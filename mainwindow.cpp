@@ -15,6 +15,7 @@
 #include <QJsonDocument>
 #include <QDir>
 #include <map>
+#include <tuple>
 
 #include "texteditprintmenuvisitor.h"
 #include "menuiterator.h"
@@ -115,23 +116,35 @@ void MainWindow::slotSaveEditedItem()
 
 void MainWindow::slotOpenFile()
 {
-    QFileDialog openDialog(this, tr("Open File..."), QDir::homePath(), tr("Json Files (*.json);All Files (*.*)"));
+    QFileDialog openDialog(this, tr("Open File..."), QDir::currentPath(), tr("Json Files (*.json);;All Files (*.*)"));
     openDialog.setAcceptMode(QFileDialog::AcceptOpen);
-    QFile file(QFileDialog::getOpenFileName(this, tr("Open File..."), QDir::homePath(), "Json Files (*.json);; All Files (*.*)"));
-    file.open(QIODevice::ReadOnly);
-
-    QTextStream file_text(&file);
-    QString json_string;
-    json_string = file_text.readAll();
-    file.close();
-    QByteArray json_bytes = json_string.toLocal8Bit();
-    auto result = QJsonDocument::fromJson(json_bytes);
-    auto arrJson = result.object();
-    mRoot.reset();
-    auto root = std::make_unique<Menu>("MAIN MENU");
-    root->append(std::move(createMenuFromJson(arrJson)));
-    mRoot = std::move(root);
-    slotUpdateMenu();
+    if(QDialog::Accepted == openDialog.exec())
+    {
+        auto filePath = openDialog.selectedFiles()[0];
+        QFile file(filePath);
+        file.open(QIODevice::ReadOnly);
+        QTextStream file_text(&file);
+        QString json_string;
+        json_string = file_text.readAll();
+        file.close();
+        QByteArray json_bytes = json_string.toLocal8Bit();
+        QJsonParseError parseErrorJson;
+        auto result = QJsonDocument::fromJson(json_bytes, &parseErrorJson);
+        if(parseErrorJson.error == QJsonParseError::NoError)
+        {
+            auto arrJson = result.object();
+            mRoot.reset();
+            auto root = std::make_unique<Menu>("MAIN MENU");
+            root->append(std::move(createMenuFromJson(arrJson)));
+            mRoot = std::move(root);
+            slotUpdateMenu();
+        }
+        else
+        {
+            QMessageBox info(QMessageBox::Warning, tr("Error"), QString("Error in reading json file: %1.").arg(parseErrorJson.errorString()));
+            info.exec();
+        }
+    }
 }
 
 void MainWindow::slotDeleteItem()
@@ -153,6 +166,9 @@ void MainWindow::createMenu()
 {
     auto root = std::make_unique<Menu>("MAIN MENU");
 
+    auto pizzaMenu = std::make_unique<Menu>("Pizza Menu");
+    pizzaMenu->append(std::make_unique<MenuItem>("hawaiian pizza", 2.4, "cheese and tomato base with toppings of ham and pineapple"));
+    pizzaMenu->append(std::make_unique<MenuItem>("vegetarian pizza", 4.2, "cheese and tomato ... "));
 
 
     auto beveragesMenu = std::make_unique<Menu>("Beverages");
@@ -180,14 +196,7 @@ void MainWindow::createMenu()
     alcoDrinksMenu->append(std::make_unique<MenuItem>("Beer", 5));
     beveragesMenu->append(std::move(alcoDrinksMenu));
     root->append(std::move(beveragesMenu));
-    auto pizzaMenu = std::make_unique<Menu>("Pizza Menu");
-    pizzaMenu->append(std::make_unique<MenuItem>("hawaiian pizza", 2.4, "cheese and tomato base with toppings of ham and pineapple"));
-    pizzaMenu->append(std::make_unique<MenuItem>("vegetarian pizza", 4.2, "cheese and tomato ... "));
-    root->append(std::make_unique<MenuItem>(";",0,"p"));
     root->append(std::move(pizzaMenu));
-    auto mainRoot = std::make_unique<Menu>("main root");
-    root->append(std::make_unique<MenuItem>("Please, do not crash me", 100,":)"));
-//    mainRoot->append(std::move(root));
     mRoot = std::move(root);
 }
 
@@ -199,6 +208,8 @@ std::unique_ptr<AbstractMenuItem> MainWindow::createMenuFromJson(QJsonObject sub
      std::map<std::string, std::string> valueStr;
      std::map<std::string, double> valueDouble;
      std::map<std::string, bool> valueBool;
+     enum typeData{Str, Dbl, Bool};
+     auto mixedData = make_tuple(valueStr, valueDouble, valueBool); //tuple of 3 kind of data value:str <-> key:{str, dbl, bool}.
      for(auto i : sub)
      {
          if(i.isArray())
@@ -212,24 +223,24 @@ std::unique_ptr<AbstractMenuItem> MainWindow::createMenuFromJson(QJsonObject sub
              QString key = keys[index++];
              if(i.isString())
              {
-                 valueStr[key.toStdString()] = i.toString().toStdString();
+                 std::get<typeData::Str>(mixedData)[key.toStdString()] = i.toString().toStdString();
              }
              if(i.isDouble())
              {
-                 valueDouble[key.toStdString()] = i.toDouble();
+                 std::get<typeData::Dbl>(mixedData)[key.toStdString()] = i.toDouble();
              }
              if(i.isBool())
              {
-                 valueBool[key.toStdString()] = i.toBool();
+                 std::get<typeData::Bool>(mixedData)[key.toStdString()] = i.toBool();
              }
          }
      }
      //create new menu or menuitem
      std::unique_ptr<MenuItem> newMenuItem;
      std::unique_ptr<Menu> newMenu;
-     if(valueStr["type"] == "Menu")
+     if(std::get<typeData::Str>(mixedData)["type"] == std::string("Menu"))
      {
-         newMenu = std::make_unique<Menu>(valueStr["title"]);
+         newMenu = std::make_unique<Menu>(std::get<typeData::Str>(mixedData)["title"]/*valueStr["title"]*/);
          while(!children.empty())
          {
              //append all children
@@ -244,7 +255,9 @@ std::unique_ptr<AbstractMenuItem> MainWindow::createMenuFromJson(QJsonObject sub
      }
      else
      {
-         newMenuItem = std::make_unique<MenuItem>(valueStr["title"], valueDouble["price"], valueStr["description"]);
+         newMenuItem = std::make_unique<MenuItem>(std::get<typeData::Str>(mixedData)["title"],
+                 std::get<typeData::Dbl>(mixedData)["price"],
+                 std::get<typeData::Str>(mixedData)["description"]);
          return std::move(newMenuItem);
      }
 }
