@@ -109,9 +109,20 @@ void MainWindow::slotItemChanged()
 
 void MainWindow::slotSaveEditedItem()
 {
-    ui->menuEditorDelegate->slotSave();
-    ui->savePushButton->setEnabled(false);
-    slotUpdateMenu();
+    if(ui->menuEditorDelegate->slotSave())
+    {
+            if(ui->menuComboBox->checkDublicate(ui->menuEditorDelegate->getTempTitle()))
+            {
+             ui->savePushButton->setEnabled(false);
+             slotUpdateMenu();
+            }
+            else
+            {
+                QMessageBox msgBox;
+                msgBox.setText("Menu item with the same name already exists.");
+                msgBox.exec();
+            }
+    }
 }
 
 void MainWindow::slotOpenFile()

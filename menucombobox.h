@@ -4,6 +4,8 @@
 #include <QComboBox>
 #include <QHash>
 
+#include <menu.h>
+
 class AbstractMenuItem;
 
 class MenuComboBox : public QComboBox
@@ -17,6 +19,9 @@ public:
     AbstractMenuItem* currentMenuItem() const;
     void clearData();
     void updateComboBox();
+
+    bool checkDublicate(std::string tempTitle);
+
 private:
     void populateComboBox();
 

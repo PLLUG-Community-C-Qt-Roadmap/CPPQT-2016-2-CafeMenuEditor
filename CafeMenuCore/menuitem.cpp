@@ -1,5 +1,5 @@
 #include "menuitem.h"
-#include "menu.h";
+#include "menu.h"
 
 #include "consoleprintvisitor.h"
 
@@ -31,8 +31,6 @@ void MenuItem::setNeue(bool neue)
 {
     mNeue = neue;
 }
-
-
 
 std::string MenuItem::description() const
 {

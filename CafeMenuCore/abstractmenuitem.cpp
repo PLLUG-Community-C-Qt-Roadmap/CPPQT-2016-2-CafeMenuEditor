@@ -1,4 +1,5 @@
 #include "abstractmenuitem.h"
+#include <menuiterator.h>
 
 /*!
  * \brief Public constructor.

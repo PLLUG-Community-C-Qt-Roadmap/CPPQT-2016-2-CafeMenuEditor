@@ -3,6 +3,7 @@
 
 #include "menu.h"
 #include "menuitem.h"
+#include "menucombobox.h"
 
 EditorDelegate::EditorDelegate(QWidget *parent) :
     QWidget(parent),
@@ -61,32 +62,45 @@ void EditorDelegate::clear()
 
 
 
-void EditorDelegate::slotSave()
+bool EditorDelegate::slotSave()
 {
-//    if(ui->menuItemNameLineEdit->text().toStdString().empty())
-//    {
-//            do
-//            {
-//                QMessageBox msgBox;
-//                msgBox.setText("Please, enter name first.");
-//                msgBox.exec();
-
-//            }
-//        while(!(ui->menuItemNameLineEdit->text().toStdString().empty()));
-
-//    }
-//    else
-//    {
+    if((ui->menuItemNameLineEdit->text().toStdString().empty() && ui->stackedWidget->currentWidget()==ui->pageMenuItem)
+            ||
+      (ui->menuNameLineEdit->text().toStdString().empty() && ui->stackedWidget->currentWidget()==ui->pageMenu))
+    {
+                QMessageBox msgBox;
+                msgBox.setText("Please, enter name first.");
+                msgBox.exec();
+                return false;
+    }
+    else
+    {
             if (mEditedMenuItem)
             {
-                mEditedMenuItem->setTitle(ui->menuItemNameLineEdit->text().toStdString());
-                mEditedMenuItem->setDescription(ui->menuItemDescriptionLineEdit->text().toStdString());
-                mEditedMenuItem->setPrice(ui->menuItemPriceSpinBox->value());
-                mEditedMenuItem->setNeue(ui->menuItemProposalChekBox->checkState());
+                    mEditedMenuItem->setTitle(ui->menuItemNameLineEdit->text().toStdString());
+                    mEditedMenuItem->setDescription(ui->menuItemDescriptionLineEdit->text().toStdString());
+                    mEditedMenuItem->setPrice(ui->menuItemPriceSpinBox->value());
+                    mEditedMenuItem->setNeue(ui->menuItemProposalChekBox->checkState());
+
+                    tempTitle=ui->menuItemNameLineEdit->text().toStdString();
+
+                    return true;
             }
-            if(mEditedMenu)
+
+            if (mEditedMenu)
             {
-                mEditedMenu->setTitle(ui->menuNameLineEdit->text().toStdString());
+                   mEditedMenu->setTitle(ui->menuNameLineEdit->text().toStdString());
+
+                   tempTitle=ui->menuNameLineEdit->text().toStdString();
+
+                   return true;
             }
-//    }
+
+    }
 }
+
+std::__cxx11::string EditorDelegate::getTempTitle()
+{
+    return tempTitle;
+}
+

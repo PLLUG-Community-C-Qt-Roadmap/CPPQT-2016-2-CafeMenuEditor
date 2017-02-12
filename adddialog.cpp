@@ -82,10 +82,20 @@ void AddDialog::slotNextClicked()
 
 void AddDialog::slotOkClicked()
 {
-
-    ui->widget->slotSave();
-    mParent->append(std::move(mNewItem));
-    accept();
+   if(ui->widget->slotSave())
+     {
+        if(ui->parentComboBox->checkDublicate(ui->widget->getTempTitle()))
+           {
+                mParent->append(std::move(mNewItem));
+                accept();
+           }
+        else
+           {
+                QMessageBox msgBox;
+                msgBox.setText("Menu item with the same name already exists.");
+                msgBox.exec();
+           }
+     }
 }
 
 void AddDialog::slotChanged()

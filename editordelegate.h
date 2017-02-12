@@ -23,11 +23,9 @@ public:
 
     void clear();
 
-
-
-
 public slots:
-    void slotSave();
+    bool slotSave();
+    std::string getTempTitle();
 
 signals:
     void itemChanged();
@@ -35,8 +33,11 @@ signals:
 private:
     Ui::EditorDelegate *ui;
 
+    std::string tempTitle;
+
     Menu *mEditedMenu;
     MenuItem *mEditedMenuItem;
+
 };
 
 #endif // EDITORDELEGATE_H

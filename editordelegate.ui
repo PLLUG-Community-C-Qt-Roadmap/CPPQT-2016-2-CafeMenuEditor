@@ -59,7 +59,14 @@
           </widget>
          </item>
          <item>
-          <widget class="QDoubleSpinBox" name="menuItemPriceSpinBox"/>
+          <widget class="QDoubleSpinBox" name="menuItemPriceSpinBox">
+           <property name="minimum">
+            <double>0.500000000000000</double>
+           </property>
+           <property name="maximum">
+            <double>500.000000000000000</double>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>

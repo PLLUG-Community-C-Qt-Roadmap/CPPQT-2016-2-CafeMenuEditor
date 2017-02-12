@@ -1,6 +1,5 @@
 #include "menucombobox.h"
 
-#include <menu.h>
 #include "menuiterator.h"
 
 /*!
@@ -44,6 +43,7 @@ void MenuComboBox::updateComboBox()
     populateComboBox();
 }
 
+
 void MenuComboBox::populateComboBox()
 {
     if (mRoot) // Перевіряємо чи кореневий елемент встановлено
@@ -51,8 +51,8 @@ void MenuComboBox::populateComboBox()
         MenuIterator iterator(mRoot); // Створюємо ітератор для меню.
         while (iterator.hasNext())  // Якщо елемент є
         {
-            AbstractMenuItem * item = iterator.next(); //  Беремо елемент, і пересуваємо ітератор на наступний
 
+            AbstractMenuItem * item = iterator.next(); //  Беремо елемент, і пересуваємо ітератор на наступний
             // Додаємо елементи у QHash
             // To be able to access certain menu item by item id taken from QComboBox item data.
             int itemId = mItemByIndex.size();   // When QHash is empty id will be 0, when one element
@@ -66,4 +66,21 @@ void MenuComboBox::populateComboBox()
         }
     }
 }
+
+bool MenuComboBox::checkDublicate(std::string tempTitle)
+{
+    if (mRoot) // Перевіряємо чи кореневий елемент встановлено
+    {
+        MenuIterator iterator(mRoot); // Створюємо ітератор для меню.
+        while (iterator.hasNext())  // Якщо елемент є
+        {
+
+            AbstractMenuItem * item = iterator.next(); //  Беремо елемент, і пересуваємо ітератор на наступний
+            if(item->title()==tempTitle) // Якщо елемент містить title такий як і в елемента що додається повертаємо false
+                return false;
+        }
+        return true;
+    }
+}
+
 
